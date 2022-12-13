@@ -39,7 +39,7 @@ app.post("/petition", (req, res) => {
     // if (req.body === null) {
     //     res.redirect("/petition" , {
     //         text: true,
-    //         fillup: true
+    //         p.style.display=visible;????
     //     })
     // } 
         db.addSignatures(req.body.firstname, req.body.lastname)
@@ -55,7 +55,7 @@ app.post("/petition", (req, res) => {
 app.get("/thanks", (req, res) => {
     db.getAllSignatures()
     .then(data => {
-        console.log(data)
+        // console.log(data)
         res.render("petition", {
             thanks: true,
             firme: data.rows.length

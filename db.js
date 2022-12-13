@@ -6,9 +6,6 @@ const db = spicedPg(`postgres:${SQL_USER}:${SQL_PASSWORD}@localhost:5432/petitio
 
 
 
-//module.exports = ('db.js')
-
-
 // getAllSignatures - use db.query to get all signatures from table signatures
 exports.getAllSignatures = function()  {
     return db.query(`SELECT * FROM signature;`)

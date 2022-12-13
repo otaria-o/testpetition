@@ -66,3 +66,12 @@ button {
 h3 {
     padding: 30px;
 }
+
+/*message fill up*/
+
+p {
+    font-family: 'Courier New', Courier, monospace;
+    color: red;
+    padding: 10px;
+    display: none;
+}
