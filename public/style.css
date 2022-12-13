@@ -61,17 +61,26 @@ button {
 }
 
 
-/*thanks*/
+/*partials texts*/
 
 h3 {
     padding: 30px;
+    color: purple;
 }
 
 /*message fill up*/
 
 p {
     font-family: 'Courier New', Courier, monospace;
-    color: red;
     padding: 10px;
+}
+
+#already {
+    color: black;
+}
+
+#ops {
+    color: red;
     display: none;
 }
+
