@@ -5,5 +5,4 @@ exports.hash = password => {
         return bcrypt.hash(password, salt);
     });
 };
-
 exports.compare = bcrypt.compare;
