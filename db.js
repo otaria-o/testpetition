@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const { SQL_USER, SQL_PASSWORD } = process.env;
 const spicedPg = require('spiced-pg');
-const db = spicedPg(`postgres:${SQL_USER}:${SQL_PASSWORD}@localhost:5432/petition`);
+const db = spicedPg(process.env.DATABASE_URL || `postgres:${SQL_USER}:${SQL_PASSWORD}@localhost:5432/petition`);
 
 // addUser
 exports.addUser = function(firstname, lastname, email, password) {
