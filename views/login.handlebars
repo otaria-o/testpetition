@@ -1,12 +1,13 @@
 <h3>Welcome back!</h3>
-
     <section>
-        <form action="/login" method="POST" id="sign">
+        {{#if ops}}
+        <p><b>Ops, something went wrong. Fill up all the fields, please.</b></p>
+        {{/if}}
+        <form action="/login" method="POST" id="login">
             <label for="email">E-mail:</label><br>
             <input type="email" id="email" name="email"><br><br>
             <label for="password">Password:</label><br>
             <input type="password" id="password" name="password"><br><br>
-            <p id="ops"><b>Ops, something went wrong. Fill up all the fields, please.</b></p>
             <div>
                 <button type="submit" value="submit">Log in</button>
             </div>

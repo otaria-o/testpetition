@@ -1,6 +1,7 @@
 
 // console.log("ciao")
 
+
 // SETTING ALL VARIABLES
 let isMouseDown=false;
 
@@ -44,20 +45,22 @@ function mouseup() {
   isMouseDown=false
 }
 
-canvas.addEventListener('mousedown', () => {
+exports.signat = function() {
+  canvas.addEventListener('mousedown', () => {
     mousedown(canvas, evt);
-  });
+
   canvas.addEventListener('mousemove',() =>  {
     mousemove(canvas, evt);
   });
   canvas.addEventListener('mouseup',mouseup);
   // add event listener for mouseleave
   canvas.addEventListener('mouseleave', function(){
-      var dataURL = canvas.toDataURL();
+      return dataURL = canvas.toDataURL();
       console.log(dataURL)
-      return
+      
   });
-  
+});
+}
 
 // let prevX = 0
 // let prevY = 0
