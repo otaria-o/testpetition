@@ -1,5 +1,10 @@
 <h3>Tell us more about you!</h3>
 <section>
+{{#if ops}}
+    <p><b>Ops, something went wrong. Sorry.</b></p>
+{{/if}}
+</section>
+<section>
     <form action="/profile" method="POST" id="profile">
         <label for="city">City:</label><br>
         <input type="text" id="city" name="city"><br><br>
@@ -12,3 +17,6 @@
         </div>
     </form>
 </section>
+<footer>
+    <a href="/logout">Log out</a>
+</footer>

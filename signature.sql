@@ -15,7 +15,7 @@ CREATE TABLE signatures (
             id SERIAL PRIMARY KEY,
             -- get rid of first and last!
             signature TEXT NOT NULL,
-            user_id INTEGER NOT NULL REFERENCES users(id),
+            user_id INTEGER NOT NULL UNIQUE REFERENCES users(id),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -25,6 +25,6 @@ CREATE TABLE profiles (
             age VARCHAR(255) NOT NULL,
             homepage TEXT NOT NULL,
             -- get rid of first and last!
-            user_id INTEGER NOT NULL REFERENCES users(id),
+            user_id INTEGER NOT NULL UNIQUE REFERENCES users(id),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );

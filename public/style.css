@@ -4,6 +4,7 @@
 }
 
 body {
+    width: 100%;
     display: grid;
     justify-content: center;
     background-color: yellow;
@@ -67,7 +68,11 @@ button {
     margin: 20px;
 }
 
-/*message fill up or signature deleted*/
+footer {
+    margin-top: 100px;
+}
+
+/*error message or signature deleted*/
 
 p {
     font-family: 'Courier New', Courier, monospace;

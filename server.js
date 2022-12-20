@@ -1,3 +1,5 @@
+// GENERAL SET UP
+
 const express = require("express");
 const spicedPg = require("spiced-pg");
 const app = express();
@@ -12,7 +14,7 @@ const crypt = require("./bcrypt.js")
 const { requireLoggedInUser, requireLoggedOutUser, requireNoSignature, requireSignature } = require("./middleware.js")
 // const getUrl = require("./public/script.js") 
 
-// Handlebars Setup
+// handlebars setup
 const { engine } = require("express-handlebars");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const { nextTick } = require("process");
@@ -29,12 +31,15 @@ app.use(cookieSession( {
     maxAge: 1000 * 60 * 60 * 24 * 14
 }));
 
+
+// GET REQUEST
+
 app.get("/petition", (req, res) => {
     res.render("petition");
 });
 
 app.get("/", (req, res) => {
-    res.redirect("/petition")
+    res.redirect("/petition");
 });
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
@@ -56,10 +61,10 @@ app.get("/sign", requireLoggedInUser, requireNoSignature, (req, res) => {
 app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
     db.getAllSignatures()
     .then(data => {
-        // console.log("numero di firme", data.rows.length)
+        console.log("numero di firme", data.rows.length)
         res.render("thanks", {
             firme: data.rows.length
-        });
+        })
     })
     .catch(err => {
         console.log("error appeared for query select getAllSig:", err);
@@ -79,31 +84,27 @@ app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
     })  
 }); 
 
-// app.get("/editprofile", requireLoggedInUser, (req, res) => {
-//     res.render("editprofile")
-// });
-// app.get("/editprofile", requireLoggedInUser, (req, res) => {
-//     db.getProfile(req.session.userId)
-//     .then (data => {
-//     console.log(data)
-//         res.render("editprofile", {
-//         firstname: data.rows[0].firstname,
-//         lastname: data.rows[0].lastname,
-//         email: data.rows[0].email,
-//         password: data.rows[0].password,
-//         city: data.rows[0].city,
-//         age: data.rows[0].age,
-//         homepage: data.rows[0].homepage
-//         })
-//     })
-// });
+app.get("/editprofile", requireLoggedInUser, (req, res) => {
+    console.log(req.session.userId)
+    db.getProfile(req.session.userId)
+    .then (data => {
+    // console.log(data)
+        res.render("editprofile", {
+        firstname: data.rows[0].first,
+        lastname: data.rows[0].last,
+        // email: data.rows[0].email,
+        // password: data.rows[0].password,
+        city: data.rows[0].city,
+        age: data.rows[0].age,
+        homepage: data.rows[0].homepage
+        })
+    })
+});
 
 // app.get("/city", (req, res) => {
 //     // console.log(req.params.url)
 //     db.getSignersbycity()
 //     res.render("signersbycity", {
-        
-
 //     })
 // });
 
@@ -111,24 +112,38 @@ app.get("/delete", requireLoggedInUser, requireSignature, (req, res) => {
     res.render("delete")
 });
 
+app.get("/deleted", requireLoggedInUser, requireSignature, (req, res) => {
+    db.deleteSig(req.session.userId)
+    .then(data => {
+    console.log(data)
+    req.session.userId = null
+    res.render("petition", {
+        deleted: true
+    })
+    })
+});
+
 app.get("/logout", requireLoggedInUser, (req,res) => {
     req.session.userId = null
     res.redirect("/")
-})
+});
+
+
+// POST REQUEST
 
 app.post("/register", (req, res) => {
-    // console.log("password di registrazione",req.body.password)
-    //  Hash the password before saving to the Database
+    // console.log("password di registrazione", req.body.password)
+    //  hash the password before saving to the Database
     crypt.hash(req.body.password)
     .then(hashedPsw => {
         console.log(hashedPsw)
         return db.addUser(req.body.firstname, req.body.lastname, req.body.email, hashedPsw)
     })
     .then(data => { 
-        console.log("data.rows", data.rows)
-        // TODO: Save cookies and redirect to profile page
+        // console.log("data.rows", data.rows)
+        // save cookies and redirect to profile page
         req.session.userId = data.rows[0].id
-        // console.log("stanno funzionando i biscotti?", req.session.userId)
+        console.log("stanno funzionando i biscotti?", req.session.userId)
         res.redirect("/profile")
     })
     .catch(err => {
@@ -140,9 +155,9 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-    // First check by the email if the user exists in your Database
-    // If he/she exists then compare if the password matches
-    // Go to the Signatures Table to see if this user already signed
+    // check by the email if the user exists in your database
+    // if he/she exists then compare if the password matches
+    // go to the signatures table to see if this user already signed
     console.log(req.body.email)
     db.checkEmail(req.body.email)
     .then(data => {
@@ -160,7 +175,7 @@ app.post("/login", (req, res) => {
                         console.log("geesese", sig)
                         req.session.userId = data.rows[0].id
                         if (sig.rows.length === 1) {
-                            // If the user has signed already redirect to Thanks Page
+                            // if the user has signed already redirect to thanks page
                             req.session.signatureId = true
                             res.redirect("/thanks")
                         } else {
@@ -182,8 +197,7 @@ app.post("/login", (req, res) => {
     })    
     .catch(err => {
         console.log("error appeared for post login:", err);
-        res.render("petition", {
-            login: true,
+        res.render("login", {
             ops: true
         })
     })
@@ -217,33 +231,30 @@ app.post("/sign", (req,res) => {
         })    
 });
 
-// app.post("/editprofile", (req,res) => {
-//     // TODO: update the table profile and users 
-//     db.updateProfile(req.body.firstname, req.body.lastname, req.body.email, req.body.password, req.body.city, req.body.age, req.body.homepage, req.session.userId)
-//     .then(data => {
-//         if (req.session.signatureId) {
-//             console.log(data)
-//             res.redirect("/thanks")
-//         }
-//         res.redirect("/sign")
-//     })
-//     .catch(err => {
-//         console.log("error appeared for post req editprofile:", err);
-//         res.render("editprofile", {
-//             ops: true
-//         }) 
-//     })
-// })
-
-app.post("/delete", (req,res) => {
-    // TODO: CANCEL signature from signatures table
-    db.deleteSig(req.session.userId)
-    .then(data => {
-    console.log(data)
-    res.render("delete", {
-        deleted: true
+app.post("/editprofile", (req,res) => {
+    // update profiles and users tables
+    crypt.hash(req.body.password)
+    .then(hashedPsw => {
+        console.log(hashedPsw)
+        Promise.all([
+        db.updateUser(req.body.firstname, req.body.lastname, hashedPsw, req.session.userId),
+        db.updateProfile(req.body.city, req.body.age, req.body.homepage, req.session.userId)
+    ])
     })
- })
+    // db.updateProfile(req.body.firstname, req.body.lastname, req.body.email, req.body.password, req.body.city, req.body.age, req.body.homepage, req.session.userId)
+    .then(data => {
+        // console.log("data:", data.rows[0])
+        if (req.session.signatureId === true) {
+            // console.log(data)
+            res.redirect("/thanks")
+        } else {
+        res.redirect("/sign")
+        }
+    })
+    .catch(err => {
+        console.log("error appeared for post req editprofile:", err);
+        res.redirect("/editprofile") 
+    })
 });
 
 app.listen(process.env.PORT || PORT, () => {

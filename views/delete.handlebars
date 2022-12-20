@@ -2,14 +2,9 @@
 <h3>Are you sure that you want to delete your signature?</h3>
 <section>
     <a href="/thanks"><button>No</button></a>
-    <form action="/delete" method="POST" id="delete">
-        <button type="submit" value="submit">Yes</button>
-    </form>
-    {{#if deleted}}
-    <p><b>Your signature has been deleted, we are very sorry.</b></p>
-    {{/if}}
+    <a href="/deleted"><button>Yes</button></a>
 </section>
-
-<a href="/logout">Logout</a>
-
+<footer>
+    <a href="/logout">Log out</a>
+</footer>
     
